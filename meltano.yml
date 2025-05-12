@@ -1,0 +1,58 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: "tap-googleadsservice"
+default_environment: test
+venv:
+  backend: uv
+environments:
+- name: test
+plugins:
+  extractors:
+  - name: "tap-googleadsservice"
+    namespace: "tap_googleadsservice"
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+
+    # TODO: Declare settings and their types here:
+    settings:
+    - name: yaml_path
+      label: Yaml Path
+      description: Path to google-ads.yaml file
+
+    - name: manager_account_id
+      label: Manager Account ID
+      description: ID of Google Ads Manager Account
+
+    - name: customer_id
+      label: Customer ID
+      description: ID of Google Ads Customer Account
+
+    - name: start_date
+      kind: date_iso8601
+      label: Start Date
+      description: Initial date to start extracting data from
+
+    # TODO: Declare required settings here:
+    settings_group_validation:
+    - [yaml_path, manager_account_id, customer_id]
+
+    # TODO: Declare default configuration values here:
+    config:
+      start_date: '2024-01-01'
+      yaml_path: 'google-ads.yaml'
+      manager_account_id: '5481961970'
+      customer_id: '7718071290'
+    metadata:
+      campaigns:
+        replication-method: INCREMENTAL
+        replication-key: date
+
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
