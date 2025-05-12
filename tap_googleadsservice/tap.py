@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk.helpers._classproperty import classproperty
+from singer_sdk.helpers.capabilities import TapCapabilities
 
 # TODO: Import your custom stream types here:
 from tap_googleadsservice import streams
@@ -44,6 +46,15 @@ class Tapgoogleadsservice(Tap):
             description="The earliest record date to sync",
         ),
     ).to_dict()
+
+    @classproperty
+    def capabilities(self) -> list[TapCapabilities]:
+        """Get tap capabilities"""
+        return [
+            TapCapabilities.CATALOG,
+            TapCapabilities.DISCOVER,
+            TapCapabilities.STATE
+        ]
 
     def discover_streams(self) -> list[streams.googleadsserviceStream]:
         """Return a list of discovered streams.
